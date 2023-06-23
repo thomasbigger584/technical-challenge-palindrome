@@ -6,6 +6,5 @@ import java.util.Optional;
 
 public interface CacheService {
     Optional<PalindromeDTO> get(String key);
-
     void put(PalindromeDTO palindrome);
 }

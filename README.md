@@ -38,7 +38,7 @@ curl  'http://localhost:8080/palindrome?value=madam'
 ```
 - Will return:
 ```json
-> {"value":"madam","palindrome":true}
+{"value":"madam","palindrome":true}
 ```
 
 --- 
@@ -47,7 +47,7 @@ curl  'http://localhost:8080/palindrome?value=techchallenge'
 ```
 - Will return:
 ```json
-> {"value":"techchallenge","palindrome":false}
+{"value":"techchallenge","palindrome":false}
 ```
 
 --- 
@@ -56,7 +56,7 @@ curl  'http://localhost:8080/palindrome?value=madam123'
 ```
 - Will return:
 ```json
-> {"message":"Palindrome value should not contain a number: 1"}
+{"message":"Palindrome value should not contain a number: 1"}
 ```
 
 --- 
@@ -65,5 +65,5 @@ curl  'http://localhost:8080/palindrome?value=mad%20am'
 ```
 - Will return:
 ```json
-> {"message":"Palindrome value should not contain any spaces"}
+{"message":"Palindrome value should not contain any spaces"}
 ```

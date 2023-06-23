@@ -4,6 +4,9 @@ public class PalindromeDTO {
     private String value;
     private boolean palindrome;
 
+    public PalindromeDTO() {
+    }
+
     public PalindromeDTO(String key, boolean palindrome) {
         this.value = key;
         this.palindrome = palindrome;

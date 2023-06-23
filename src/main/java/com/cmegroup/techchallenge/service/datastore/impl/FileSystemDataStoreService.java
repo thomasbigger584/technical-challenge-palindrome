@@ -44,7 +44,7 @@ public class FileSystemDataStoreService implements DataStoreService {
                 return objectMapper.readValue(FILE, new TypeReference<>() {
                 });
             } catch (IOException e) {
-                throw new DataStoreException("Failed to read from palindromes file", e);
+                throw new DataStoreException("Failed to read from palindromes file at path: " + FILE_PATH, e);
             }
         }
     }
@@ -62,7 +62,7 @@ public class FileSystemDataStoreService implements DataStoreService {
             try {
                 objectMapper.writeValue(FILE, allPalindromes);
             } catch (IOException e) {
-                throw new DataStoreException("Failed to write to palindromes file", e);
+                throw new DataStoreException("Failed to write to palindromes file at path: " + FILE_PATH, e);
             }
         }
     }

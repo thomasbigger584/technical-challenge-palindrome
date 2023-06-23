@@ -11,7 +11,6 @@ import java.util.concurrent.Executor;
 @EnableAsync
 @Configuration
 public class AsyncConfiguration {
-
     @Value("${app.async.core-pool-size:10}")
     private int corePoolSize;
 
