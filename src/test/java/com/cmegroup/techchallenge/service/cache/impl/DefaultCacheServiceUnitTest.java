@@ -12,8 +12,7 @@ import org.springframework.cache.Cache;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +50,7 @@ class DefaultCacheServiceUnitTest {
     }
 
     @Test
-    public void testGet() {
+    public void testGet_IsPresent() {
         PalindromeDTO palindrome = getPalindrome();
 
         when(cache.get(TEST_VALUE, PalindromeDTO.class)).thenReturn(palindrome);
@@ -61,6 +60,12 @@ class DefaultCacheServiceUnitTest {
 
         PalindromeDTO responsePalindrome = palindromeOpt.get();
         assertEquals(palindrome, responsePalindrome);
+    }
+
+    @Test
+    public void testGet_IsNotPresent() {
+        Optional<PalindromeDTO> palindromeOpt = target.get(TEST_VALUE);
+        assertFalse(palindromeOpt.isPresent());
     }
 
     private PalindromeDTO getPalindrome() {
