@@ -18,8 +18,7 @@ public class DefaultCacheService implements CacheService {
     private final Cache cache;
     private final DataStoreService dataStoreService;
 
-    public DefaultCacheService(Cache cache,
-                               DataStoreService dataStoreService) {
+    public DefaultCacheService(Cache cache, DataStoreService dataStoreService) {
         this.cache = cache;
         this.dataStoreService = dataStoreService;
     }

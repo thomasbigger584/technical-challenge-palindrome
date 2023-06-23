@@ -4,6 +4,7 @@ package com.cmegroup.techchallenge.rest;
 import com.cmegroup.techchallenge.TechChallengeApplication;
 import com.cmegroup.techchallenge.dto.ErrorDTO;
 import com.cmegroup.techchallenge.dto.PalindromeDTO;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -13,7 +14,14 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,9 +31,20 @@ import static org.junit.jupiter.api.Assertions.*;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PalindromeResourceIntegrationTest {
     private static final TestRestTemplate REST_TEMPLATE = new TestRestTemplate();
+    private static final String FILE_SYSTEM_LOCATION_PROPERTY = "app.fileSystem.fileLocation";
 
     @LocalServerPort
     private int port;
+
+    @DynamicPropertySource
+    static void registerProperties(DynamicPropertyRegistry registry) {
+        try {
+            Path testFileLocation = Files.createTempDirectory(UUID.randomUUID().toString());
+            registry.add(FILE_SYSTEM_LOCATION_PROPERTY, testFileLocation::toString);
+        } catch (IOException e) {
+            Assertions.fail("Failed to create temporary folder for testing", e);
+        }
+    }
 
     @ParameterizedTest
     @ValueSource(strings = {"madam", "kayak", ""})
