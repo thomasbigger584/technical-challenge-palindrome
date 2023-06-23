@@ -34,6 +34,7 @@
 
 - When the application starts up it will populate the cache with the palindromes stored in the datastore.
 - Both the DataStore and Cache are based on abstractions to be able to change implementation to another technology.
+- The cache currently only stores palindromes if they pass validation. Invalid input is not saved into the cache. This can change based on feedback.
 - The datastore currently uses the file system, writing the file to the users home directory, in a thread-safe manor.
   This could be changed to use the database instead via the extensibility of the architecture. The file location can be
   overridden with the property `${app.fileSystem.fileLocation}`.

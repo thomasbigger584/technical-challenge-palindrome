@@ -19,25 +19,25 @@ import java.util.List;
 @Service("fileSystem")
 @ConditionalOnProperty(name = "app.datastore-type", havingValue = "fileSystem")
 public class FileSystemDataStoreService implements DataStoreService {
-    private static final String DIRECTORY_PROPERTY = "user.home";
-    private static final String DEFAULT_OUTPUT_DIRECTORY = System.getProperty(DIRECTORY_PROPERTY);
+    private static final String DEFAULT_DIRECTORY_PROPERTY = "user.home";
+    private static final String DEFAULT_OUTPUT_DIRECTORY = System.getProperty(DEFAULT_DIRECTORY_PROPERTY);
     private static final String PALINDROME_JSON_FILE_NAME = "palindromes";
     private static final String FILE_LOCATION_PROPERTY = "app.fileSystem.fileLocation";
     private static final String FILE_PATH_FORMAT = "%s/%s.json";
     private static final Object LOCK = new Object();
     private static final Logger LOGGER = LoggerFactory.getLogger(FileSystemDataStoreService.class);
-    private final File file;
+    private final Environment environment;
     private final ObjectMapper objectMapper;
 
     public FileSystemDataStoreService(Environment environment, ObjectMapper objectMapper) {
+        this.environment = environment;
         this.objectMapper = objectMapper;
-
-        String fileLocation = environment.getProperty(FILE_LOCATION_PROPERTY, DEFAULT_OUTPUT_DIRECTORY);
-        this.file = new File(String.format(FILE_PATH_FORMAT, fileLocation, PALINDROME_JSON_FILE_NAME));
     }
 
     @Override
     public List<PalindromeDTO> getAll() {
+        File file = getFile();
+
         synchronized (LOCK) {
             if (!file.exists()) {
                 return new ArrayList<>();
@@ -57,9 +57,10 @@ public class FileSystemDataStoreService implements DataStoreService {
     @Override
     public void save(PalindromeDTO palindrome) {
         LOGGER.info("Saving palindrome {}", palindrome);
+        File file = getFile();
 
         synchronized (LOCK) {
-            ensureFileCreated();
+            ensureFileCreated(file);
 
             List<PalindromeDTO> allPalindromes = getAll();
             allPalindromes.add(palindrome);
@@ -72,7 +73,7 @@ public class FileSystemDataStoreService implements DataStoreService {
         }
     }
 
-    private synchronized void ensureFileCreated() {
+    private synchronized void ensureFileCreated(File file) {
         if (!file.exists()) {
             try {
                 boolean newFile = file.createNewFile();
@@ -83,5 +84,10 @@ public class FileSystemDataStoreService implements DataStoreService {
                 throw new DataStoreException("Failed to create new palindromes file at path: " + file.getPath(), e);
             }
         }
+    }
+
+    private File getFile() {
+        String fileLocation = environment.getProperty(FILE_LOCATION_PROPERTY, DEFAULT_OUTPUT_DIRECTORY);
+        return new File(String.format(FILE_PATH_FORMAT, fileLocation, PALINDROME_JSON_FILE_NAME));
     }
 }

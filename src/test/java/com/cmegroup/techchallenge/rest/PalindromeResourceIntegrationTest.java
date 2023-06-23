@@ -48,7 +48,7 @@ class PalindromeResourceIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"madam", "kayak", ""})
-    public void testGetPalindrome_IsSuccessful_ReturnsTrue(String value) {
+    void testGetPalindrome_IsSuccessful_ReturnsTrue(String value) {
         String url = createURLWithPort("/palindrome?value=" + value);
 
         ResponseEntity<PalindromeDTO> response =
@@ -63,7 +63,7 @@ class PalindromeResourceIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"palindrome", "technical", "challenge"})
-    public void testGetPalindrome_IsSuccessful_ReturnsFalse(String value) {
+    void testGetPalindrome_IsSuccessful_ReturnsFalse(String value) {
         String url = createURLWithPort("/palindrome?value=" + value);
 
         ResponseEntity<PalindromeDTO> response =
@@ -78,7 +78,7 @@ class PalindromeResourceIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"madam1", "2kayak", "123", "ma1d2am"})
-    public void testGetPalindrome_IsFailure_NoNumbersAllowed(String value) {
+    void testGetPalindrome_IsFailure_NoNumbersAllowed(String value) {
         String url = createURLWithPort("/palindrome?value=" + value);
 
         ResponseEntity<ErrorDTO> response =
@@ -92,7 +92,7 @@ class PalindromeResourceIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"madam ", " kayak", "   ", "ma d am"})
-    public void testGetPalindrome_IsFailure_NoSpacesAllowed(String value) {
+    void testGetPalindrome_IsFailure_NoSpacesAllowed(String value) {
         String url = createURLWithPort("/palindrome?value=" + value);
 
         ResponseEntity<ErrorDTO> response =

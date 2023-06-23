@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service("space")
 public class SpaceValidationService implements ValidationService {
+
     @Override
     public void validate(String value) {
         if (value.contains(" ")) {

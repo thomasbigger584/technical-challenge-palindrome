@@ -29,7 +29,7 @@ class DefaultCacheServiceUnitTest {
     private DefaultCacheService target;
 
     @Test
-    public void testInit() {
+    void testInit() {
         PalindromeDTO palindrome = getPalindrome();
         List<PalindromeDTO> palindroneList = List.of(palindrome, palindrome);
 
@@ -41,7 +41,7 @@ class DefaultCacheServiceUnitTest {
     }
 
     @Test
-    public void testPut() {
+    void testPut() {
         PalindromeDTO palindrome = getPalindrome();
 
         target.put(palindrome);
@@ -50,7 +50,7 @@ class DefaultCacheServiceUnitTest {
     }
 
     @Test
-    public void testGet_IsPresent() {
+    void testGet_IsPresent() {
         PalindromeDTO palindrome = getPalindrome();
 
         when(cache.get(TEST_VALUE, PalindromeDTO.class)).thenReturn(palindrome);
@@ -63,7 +63,7 @@ class DefaultCacheServiceUnitTest {
     }
 
     @Test
-    public void testGet_IsNotPresent() {
+    void testGet_IsNotPresent() {
         Optional<PalindromeDTO> palindromeOpt = target.get(TEST_VALUE);
         assertFalse(palindromeOpt.isPresent());
     }

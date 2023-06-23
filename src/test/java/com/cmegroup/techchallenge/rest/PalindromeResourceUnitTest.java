@@ -23,7 +23,7 @@ class PalindromeResourceUnitTest {
     private PalindromeResource target;
 
     @Test
-    public void testIsPalindrome() {
+    void testIsPalindrome() {
         PalindromeDTO palindrome = new PalindromeDTO();
         palindrome.setValue(TEST_VALUE);
         palindrome.setPalindrome(true);

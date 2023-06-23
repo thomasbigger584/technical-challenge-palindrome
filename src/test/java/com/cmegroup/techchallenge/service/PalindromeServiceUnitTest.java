@@ -33,13 +33,13 @@ class PalindromeServiceUnitTest {
     private PalindromeService target;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         List<ValidationService> validationList = List.of(validationService);
         target = new PalindromeService(validationList, cacheService, dataStoreService);
     }
 
     @Test
-    public void testIsPalindrome_NotInCache_IsTrue() {
+    void testIsPalindrome_NotInCache_IsTrue() {
         when(cacheService.get(TEST_PALINDROME_1)).thenReturn(Optional.empty());
 
         PalindromeDTO result = target.isPalindrome(TEST_PALINDROME_1);
@@ -51,7 +51,7 @@ class PalindromeServiceUnitTest {
     }
 
     @Test
-    public void testIsPalindrome_NotInCache_IsFalse() {
+    void testIsPalindrome_NotInCache_IsFalse() {
         when(cacheService.get(TEST_PALINDROME_2)).thenReturn(Optional.empty());
 
         PalindromeDTO result = target.isPalindrome(TEST_PALINDROME_2);
@@ -63,7 +63,7 @@ class PalindromeServiceUnitTest {
     }
 
     @Test
-    public void testIsPalindrome_InCache() {
+    void testIsPalindrome_InCache() {
         PalindromeDTO palindrome = new PalindromeDTO();
         palindrome.setValue(TEST_PALINDROME_1);
         palindrome.setPalindrome(true);

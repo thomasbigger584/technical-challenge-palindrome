@@ -18,14 +18,14 @@ class SpaceValidationServiceUnitTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"madam", "kayak", ""})
-    public void testValidate_IsSuccessful(String value) {
+    void testValidate_IsSuccessful(String value) {
         target.validate(value);
         assertTrue(true);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"madam ", " kayak", "   ", "ma d am"})
-    public void testValidate_IsFailure(String value) {
+    void testValidate_IsFailure(String value) {
         assertThrows(ValidationException.class, () -> target.validate(value));
     }
 }

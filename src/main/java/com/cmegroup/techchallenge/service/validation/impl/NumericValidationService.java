@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service("numeric")
 public class NumericValidationService implements ValidationService {
+
     @Override
     public void validate(String value) {
         char[] characterArray = value.toCharArray();
