@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -19,39 +20,43 @@ import java.util.List;
 @ConditionalOnProperty(name = "app.datastore-type", havingValue = "fileSystem")
 public class FileSystemDataStoreService implements DataStoreService {
     private static final String DIRECTORY_PROPERTY = "user.home";
+    private static final String DEFAULT_OUTPUT_DIRECTORY = System.getProperty(DIRECTORY_PROPERTY);
     private static final String PALINDROME_JSON_FILE_NAME = "palindromes";
-    private static final String FILE_PATH = String.format("%s/%s.json",
-            System.getProperty(DIRECTORY_PROPERTY), PALINDROME_JSON_FILE_NAME);
-    private static final File FILE = new File(FILE_PATH);
+    private static final String FILE_LOCATION_PROPERTY = "app.fileSystem.fileLocation";
+    private static final String FILE_PATH_FORMAT = "%s/%s.json";
     private static final Object LOCK = new Object();
-    private final Logger logger = LoggerFactory.getLogger(FileSystemDataStoreService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileSystemDataStoreService.class);
+    private final File file;
     private final ObjectMapper objectMapper;
 
-    public FileSystemDataStoreService(ObjectMapper objectMapper) {
+    public FileSystemDataStoreService(Environment environment, ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+
+        String fileLocation = environment.getProperty(FILE_LOCATION_PROPERTY, DEFAULT_OUTPUT_DIRECTORY);
+        this.file = new File(String.format(FILE_PATH_FORMAT, fileLocation, PALINDROME_JSON_FILE_NAME));
     }
 
     @Override
     public List<PalindromeDTO> getAll() {
         synchronized (LOCK) {
-            if (!FILE.exists()) {
+            if (!file.exists()) {
                 return new ArrayList<>();
             }
-            if (FILE.length() == 0) {
+            if (file.length() == 0) {
                 return new ArrayList<>();
             }
             try {
-                return objectMapper.readValue(FILE, new TypeReference<>() {
+                return objectMapper.readValue(file, new TypeReference<>() {
                 });
             } catch (IOException e) {
-                throw new DataStoreException("Failed to read from palindromes file at path: " + FILE_PATH, e);
+                throw new DataStoreException("Failed to read from palindromes file at path: " + file.getPath(), e);
             }
         }
     }
 
     @Override
     public void save(PalindromeDTO palindrome) {
-        logger.info("Saving palindrome {}", palindrome);
+        LOGGER.info("Saving palindrome {}", palindrome);
 
         synchronized (LOCK) {
             ensureFileCreated();
@@ -60,22 +65,22 @@ public class FileSystemDataStoreService implements DataStoreService {
             allPalindromes.add(palindrome);
 
             try {
-                objectMapper.writeValue(FILE, allPalindromes);
+                objectMapper.writeValue(file, allPalindromes);
             } catch (IOException e) {
-                throw new DataStoreException("Failed to write to palindromes file at path: " + FILE_PATH, e);
+                throw new DataStoreException("Failed to write to palindromes file at path: " + file.getPath(), e);
             }
         }
     }
 
     private synchronized void ensureFileCreated() {
-        if (!FILE.exists()) {
+        if (!file.exists()) {
             try {
-                boolean newFile = FILE.createNewFile();
+                boolean newFile = file.createNewFile();
                 if (!newFile) {
-                    logger.warn("File already created at path: " + FILE_PATH);
+                    LOGGER.warn("File already created at path: " + file.getPath());
                 }
             } catch (IOException e) {
-                throw new DataStoreException("Failed to create new palindromes file at path: " + FILE_PATH, e);
+                throw new DataStoreException("Failed to create new palindromes file at path: " + file.getPath(), e);
             }
         }
     }
