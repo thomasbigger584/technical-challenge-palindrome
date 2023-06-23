@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultCacheServiceUnitTest {
-    public static final String TEST_VALUE = "madam";
+    private static final String TEST_VALUE = "madam";
 
     @Mock
     private Cache cache;
